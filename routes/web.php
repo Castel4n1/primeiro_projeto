@@ -42,7 +42,13 @@ Route::post('/cadastro', function(Request $request){
 // CADASTRO >>>>>>>
 Route::prefix('cadastros')->group(function()
 {
-    Route::get('/', [CadastroController::class, 'index'])->name('cadastro.index');
+    Route::get('/',             [CadastroController::class,         'index'])->name('cadastro.index');
+    Route::get('/novo',         [CadastroController::class,         'create'])->name('cadastro.create');
+    Route::get('/{id}/show',    [CadastroController::class,         'show'])->name('cadastro.show');
+    Route::get('/{id}/editar',  [CadastroController::class,         'edit'])->name('cadastro.edit');
+    Route::get('/{id}/apagar',  [CadastroController::class,         'destroy'])->name('cadastro.destroy');
+    Route::post('/store',       [CadastroController::class,         'store'])->name('cadastro.store');
+    Route::POST('/{id}/update',  [CadastroController::class,         'update'])->name('cadastro.update');
 });
 
 require __DIR__.'/auth.php';

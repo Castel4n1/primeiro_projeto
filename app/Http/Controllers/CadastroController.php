@@ -30,7 +30,8 @@ class CadastroController extends Controller
      */
     public function create()
     {
-        //
+        $cadastro = null;
+        return view('cadastro.form')->with(compact('cadastro'));
     }
 
     /**
@@ -41,7 +42,14 @@ class CadastroController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $cadastro = new Cadastro();
+        $cadastro->fill($request->all());
+        $cadastro->nome = strtoupper($request->nome);
+        $cadastro->save();
+
+        return redirect()->route('cadastro.index');
+        
+        
     }
 
     /**
@@ -50,9 +58,14 @@ class CadastroController extends Controller
      * @param  \App\Models\Cadastro  $cadastro
      * @return \Illuminate\Http\Response
      */
-    public function show(Cadastro $cadastro)
+    public function show(int $id)
     {
-        //
+        $cadastro = Cadastro::find($id);
+        if(!$cadastro){
+            return redirect()->route('cadastro.index');
+        }
+            
+        return view('cadastro.show')->with(compact('cadastro'));
     }
 
     /**
@@ -61,9 +74,13 @@ class CadastroController extends Controller
      * @param  \App\Models\Cadastro  $cadastro
      * @return \Illuminate\Http\Response
      */
-    public function edit(Cadastro $cadastro)
+    public function edit(int $id)
     {
-        //
+        $cadastro = Cadastro::find($id);
+        if(!$cadastro){
+            return redirect()->route('cadastro.index');
+        }
+        return view('cadastro.form')->with(compact('cadastro'));
     }
 
     /**
@@ -73,9 +90,20 @@ class CadastroController extends Controller
      * @param  \App\Models\Cadastro  $cadastro
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cadastro $cadastro)
+    public function update(Request $request, $id)
     {
-        //
+        $cadastro = Cadastro::find($id);
+        $cadastro->fill($request->all());
+        $cadastro->save();
+
+        return redirect()->route('cadastro.show',['id' => $cadastro->id]);
+        // $cadastro->update([
+        //     'nome' => $request->nome,
+        //     'email'=> $request->email,
+        //     'observacoes'=> $request->observacoes,
+        //]);
+
+        
     }
 
     /**
@@ -84,8 +112,10 @@ class CadastroController extends Controller
      * @param  \App\Models\Cadastro  $cadastro
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cadastro $cadastro)
+    public function destroy($id)
     {
-        //
+        $cadastro = Cadastro::find($id);
+        $cadastro->delete();
+        return redirect()->back();
     }
 }
